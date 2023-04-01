@@ -2,7 +2,7 @@
 
 output="datatable-20230401.tsv"
 
-printf "data\ttime\ttemperature_celsius\thumidity_perc\tamplitude_m\tpressure_hPa\tweather\n" > $output
+printf "date\ttime\ttemperature_celsius\thumidity_perc\tamplitude_m\tpressure_hPa\tweather\n" > $output
 
 clear
 
