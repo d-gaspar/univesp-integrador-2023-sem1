@@ -8,7 +8,7 @@ printf "date\ttime\ttemperature_celsius\thumidity_perc\taltitude_m\tpressure_hPa
 
 clear
 
-for f in raw/*; do
+for f in data/raw/*; do
     weather=$(echo "$f" | awk -F'.' '{print $1}' | awk -F'-' '{print $NF}')
 
     cat "$f" | grep -iv "connect" | awk -F'\t' -v weather=$weather '
