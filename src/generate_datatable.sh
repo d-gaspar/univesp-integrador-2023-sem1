@@ -1,6 +1,8 @@
 #!/bin/bash
 
-output="datatable-20230401.tsv"
+mkdir -p temp
+
+output="temp/datatable.tsv"
 
 printf "date\ttime\ttemperature_celsius\thumidity_perc\taltitude_m\tpressure_hPa\tweather\n" > $output
 
