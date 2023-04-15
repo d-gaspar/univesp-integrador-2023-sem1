@@ -15,7 +15,7 @@ Para coleta dos dados foi utilizado o arduino com os componentes BME280 e Blueto
 O script utilizado no arduino está localizado em **src/ARDUINO_BLUETOOTH_BME280.2023-03-28.ino** e foi gerado utilizando conforme o esquema da **Figura 1**.
 
 ![Esquema arduino](image/scheme_bme280_bluetooth-hc-05.png)
-<center>**Figura 1:** Esquema arduino para coleta de dados meteorológicos.</center>
+<center><b>Figura 1:</b> Esquema arduino para coleta de dados meteorológicos.</center>
 
 Após a coleta de dados, é gerado o **datatable** utilizando o código abaixo:
 
@@ -39,6 +39,6 @@ Para gerar o relatório dos dados (**Figura 2**) gerados obtidos foi utilizado o
 $ Rscript src/report_data.R
 ```
 
-![Relatório da captura inicial de dados]()
+![Relatório da captura inicial de dados](image/report_data.png)
 
 

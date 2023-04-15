@@ -4,10 +4,11 @@ mkdir -p temp
 
 output="temp/datatable.tsv"
 
-printf "date\ttime\ttemperature_celsius\thumidity_perc\taltitude_m\tpressure_hPa\tweather\n" > $output
+printf "id\tdate\ttime\ttemperature_celsius\thumidity_perc\taltitude_m\tpressure_hPa\tweather\n" > $output
 
 clear
 
+id=1
 for f in data/raw/*; do
     weather=$(echo "$f" | awk -F'.' '{print $1}' | awk -F'-' '{print $NF}')
 
@@ -20,12 +21,14 @@ for f in data/raw/*; do
             gsub(/[THAP]:/, "\t")
             print $0"\t"weather
         }
-    ' | awk -F'\t' '
+    ' | awk -F'\t' -v id=$id '
         {
             gsub(/ /, "\t", $1)
-            print $0
+            print id"\t"$0
         }
     ' >> $output
+
+    id=$(($id+1))
 done
 
 # remove ^M
