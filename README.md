@@ -40,5 +40,5 @@ $ Rscript src/report_data.R
 ```
 
 ![Relatório da captura inicial de dados](image/report_data.png)
-
+<center><b>Figura 2:</b> Relatório da captura inicial de dados.</center>
 
