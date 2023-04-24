@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -16,12 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.io.InputStream
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class BluetoothService(private val context: Context) {
@@ -42,7 +40,7 @@ class BluetoothService(private val context: Context) {
 
         // verifica se o dispositivo suporta bluetooth
         if (bluetoothAdapter == null) {
-            Toast.makeText(context, "Este dispositivo nao suporta bluetooth", Toast.LENGTH_LONG).show()
+            //Toast.makeText(context, "Este dispositivo nao suporta bluetooth", Toast.LENGTH_SHORT).show()
             return null
         }
 
@@ -69,73 +67,64 @@ class BluetoothService(private val context: Context) {
         // verifica se existem dispositivos pareados
         val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter!!.bondedDevices
         if (pairedDevices.isEmpty()) {
-            Toast.makeText(context, "Nao ha dispositivos pareados", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Nao ha dispositivos pareados", Toast.LENGTH_SHORT).show()
             return null
         }
 
         // exibir a lista de dispositivos pareados
-        for (device in pairedDevices) {
-            //Toast.makeText(context, "Dispositivo pareado: " + device.name, Toast.LENGTH_LONG).show()
+        /*for (device in pairedDevices) {
+            Toast.makeText(context, "Dispositivo pareado: " + device.name, Toast.LENGTH_SHORT).show()
             Log.d("Bluetooth", "Dispositivo pareado: " + device.name)
-        }
+        }*/
 
         // conecta ao primeiro dispositivo pareado
         val device: BluetoothDevice = pairedDevices.first()
         val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"))
-        Toast.makeText(context, "Conectando ao dispositivo: " + device.name, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "Conectando ao dispositivo: " + device.name, Toast.LENGTH_SHORT).show()
         return try {
             socket.connect()
-            Toast.makeText(context, "Conexao estabelecida", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Conexao estabelecida", Toast.LENGTH_SHORT).show()
             Log.d("Bluetooth", "connected")
 
             socket
         } catch (e: IOException) {
-            Toast.makeText(context, "Nao foi possivel conectar ao dispositivo", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Nao foi possivel conectar ao dispositivo", Toast.LENGTH_SHORT).show()
 
             null
         }
     }
 
-    /*// funcao para iniciar a thread que recebe mensagens do dispositivo bluetooth
-    fun startListeningThread(socket: BluetoothSocket) {
-        val thread = Thread(Runnable {
-            val inputStream: InputStream = socket.inputStream
-            val buffer = ByteArray(1024)
-            var bytes: Int
-
-            while (true) {
-                try {
-                    bytes = inputStream.read(buffer)
-                    val message = String(buffer, 0, bytes)
-                    // faca algo com a mensagem recebida, por exemplo:
-                    Log.d("Bluetooth", "AAAAAAAAAAAAA: $message")
-                    //runOnUiThread { Toast.makeText(context, "Mensagem recebida: $message", Toast.LENGTH_LONG).show() }
-                } catch (e: IOException) {
-                    // erro ao ler mensagem, encerrar a thread
-                    Log.d("Bluetooth", "BBBBBBBBBBB")
-                    break
-                }
-            }
-        })
-
-        thread.start()
-    }*/
-
     // funcao para iniciar a coroutine que recebe mensagens do dispositivo Bluetooth
-    fun startListeningThread(socket: BluetoothSocket) {
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun startListeningThread(socket: BluetoothSocket, updateValues: (String) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val inputStream: InputStream = socket.inputStream
             val buffer = ByteArray(2048)
             var bytes: Int
+            var messageBuffer = ""
+            var i: Int = 0
 
             while (true) {
                 try {
+                    i += 1
                     bytes = inputStream.read(buffer)
                     val message = String(buffer, 0, bytes)
-                    // faca algo com a mensagem recebida, por exemplo:
-                    withContext(Dispatchers.Main) { Toast.makeText(context, "Mensagem recebida: $message", Toast.LENGTH_LONG).show() }
+                    messageBuffer += message
+
+                    // verifica se a mensagem termina com "\n"
+                    if (message.endsWith("\n")) {
+                        withContext(Dispatchers.Main) {
+                            //val dataTime: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(Date())
+                            //println("$dataTime $messageBuffer")
+                            //updateValues("$dataTime $messageBuffer")
+                            updateValues(messageBuffer)
+                        }
+
+                        // Reinicia o buffer
+                        messageBuffer = ""
+                    }
                 } catch (e: IOException) {
-                    // Erro ao ler mensagem, encerrar a coroutine
+                    // erro ao ler mensagem, encerrar a coroutine
                     break
                 }
             }
@@ -147,9 +136,9 @@ class BluetoothService(private val context: Context) {
         if (socket != null && socket.isConnected) {
             try {
                 socket.close()
-                Toast.makeText(context, "Desconectado do dispositivo", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Desconectado do dispositivo", Toast.LENGTH_SHORT).show()
             } catch (e: IOException) {
-                Toast.makeText(context, "Erro ao desconectar do dispositivo", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Erro ao desconectar do dispositivo", Toast.LENGTH_SHORT).show()
             }
         }
     }

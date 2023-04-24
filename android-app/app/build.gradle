@@ -7,7 +7,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.myapplication"
+        applicationId "com.dgg.weather_prediction"
         minSdk 16
         targetSdk 31
         versionCode 1
