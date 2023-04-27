@@ -21,12 +21,10 @@ import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileReader
+import java.io.*
 import java.nio.file.Paths
 import java.util.*
+import org.apache.commons.math4.linear.LogisticRegression
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         // desativar sub-menus
         var linearLayout: LinearLayout
-        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_about)) {
+        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_predict, R.id.layout_about)) {
             linearLayout = findViewById<LinearLayout>(i)
             linearLayout.isEnabled = false
             linearLayout.visibility = View.INVISIBLE
@@ -65,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         var linearLayout: LinearLayout
 
         // desativa layout ativo
-        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_about)) {
+        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_predict, R.id.layout_about)) {
             linearLayout = findViewById<LinearLayout>(i)
             linearLayout.isEnabled = false
             linearLayout.visibility = View.GONE
@@ -88,6 +86,13 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "Esta funcionalidade requer a versao Android 'O' ou superior", Toast.LENGTH_SHORT).show()
                 }
+            }
+            R.id.btn_predict -> {
+                linearLayout = findViewById<LinearLayout>(R.id.layout_predict)
+                linearLayout.isEnabled = true
+                linearLayout.visibility = View.VISIBLE
+
+                prediction()
             }
             R.id.btn_about -> {
                 linearLayout = findViewById<LinearLayout>(R.id.layout_about)
@@ -243,4 +248,19 @@ class MainActivity : AppCompatActivity() {
         emailInputDialog.show()
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Predict
+
+    fun prediction () {
+        // Carrega o modelo treinado a partir do arquivo modelo_treinado.pkl
+        val inputStream = assets.open("modelo_treinado.pkl")
+        val objectInputStream = ObjectInputStream(inputStream)
+        val model = objectInputStream.readObject() as LogisticRegression
+
+        val textView_24: TextView = findViewById(R.id.text_view_predict_24h)
+
+        textView_24.text = "Chuva em 24h: "
+
+        Toast.makeText(this, "PREDICTION", Toast.LENGTH_SHORT).show()
+    }
 }

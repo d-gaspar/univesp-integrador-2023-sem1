@@ -212,6 +212,23 @@
 
         <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
         <!-- PREDICT -->
+        <LinearLayout
+            android:id="@+id/layout_predict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints"
+            android:layout_weight="5"
+        >
+            <TextView
+                android:id="@+id/text_view_predict_24h"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:text="Chuva em 24h: "
+            />
+        </LinearLayout>
 
         <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
         <!-- ABOUT -->
