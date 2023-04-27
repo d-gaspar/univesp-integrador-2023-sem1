@@ -130,7 +130,7 @@
             </LinearLayout>
 
             <ScrollView
-                android:id="@+id/SCROLLER_ID"
+                android:id="@+id/scroller_bt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
@@ -138,7 +138,7 @@
                 android:layout_weight="4"
             >
                 <TextView
-                    android:id="@+id/text_view"
+                    android:id="@+id/text_view_bt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
@@ -155,7 +155,60 @@
         </LinearLayout>
 
         <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
-        <!-- TABLE -->
+        <!-- DATA -->
+        <LinearLayout
+            android:id="@+id/layout_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints"
+            android:layout_weight="5"
+        >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="MissingConstraints"
+                android:layout_weight="1"
+                android:weightSum="3"
+            >
+                <Button
+                    android:id="@+id/btn_export_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exportar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    android:onClick="exportData"
+                    android:layout_weight="1"
+                />
+            </LinearLayout>
+            <ScrollView
+                android:id="@+id/scroller_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:fillViewport="true"
+                android:layout_weight="4"
+            >
+                <TextView
+                    android:id="@+id/text_view_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="left"
+                    android:text=""
+                    android:layout_marginBottom="16dp"
+                    android:scrollHorizontally="false"
+                    android:scrollbars="vertical"
+                    android:inputType="textMultiLine"
+                    app:layout_constraintBaseline_toBottomOf="parent"
+                    app:layout_constraintBaseline_toTopOf="parent"
+                />
+            </ScrollView>
+        </LinearLayout>
 
         <!-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa -->
         <!-- PREDICT -->
