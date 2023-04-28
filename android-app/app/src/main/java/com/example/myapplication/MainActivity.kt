@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import ai.onnxruntime.OnnxTensor
+import ai.onnxruntime.OrtEnvironment
+import ai.onnxruntime.OrtSession
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothGatt
@@ -22,9 +25,9 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import java.io.*
+import java.nio.FloatBuffer
 import java.nio.file.Paths
 import java.util.*
-import org.apache.commons.math4.linear.LogisticRegression
 
 class MainActivity : AppCompatActivity() {
 
@@ -251,16 +254,57 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------------------------------------
     // Predict
 
-    fun prediction () {
-        // Carrega o modelo treinado a partir do arquivo modelo_treinado.pkl
-        val inputStream = assets.open("modelo_treinado.pkl")
-        val objectInputStream = ObjectInputStream(inputStream)
-        val model = objectInputStream.readObject() as LogisticRegression
+    // Create an OrtSession with the given OrtEnvironment
+    private fun createORTSession( ortEnvironment: OrtEnvironment) : OrtSession {
+        val modelBytes = resources.openRawResource(R.raw.model_logistic_reg_24h).readBytes()
+        return ortEnvironment.createSession( modelBytes )
+    }
 
+    // Make predictions with given inputs
+    private fun runPrediction(temperature: Float, humidity: Float, pressure: Float, ortSession: OrtSession , ortEnvironment: OrtEnvironment ) : String {
+        // obter o nome do nó de entrada.
+        val inputName = ortSession.inputNames?.iterator()?.next()
+
+        // criar um objeto FloatBuffer com os valores de entrada.
+        val floatBufferInputs = FloatBuffer.wrap(floatArrayOf(temperature, humidity, pressure))
+
+        // cria um tensor de entrada com os valores do buffer de floats de formato (1, 1).
+        // IMPORTANTE *************************************************************************************
+        // a entrada do modelo eh dada em longArrayOf(1, 3), deve-se observar o codigo em python
+        // aqui eh um vetor com 3 entradas
+        val inputTensor = OnnxTensor.createTensor(ortEnvironment, floatBufferInputs, longArrayOf(1, 3))
+
+        // Roda o modelo
+        //val results = ortSession.run(mapOf(inputName to inputTensor), listOf(inputName))
+        val results = ortSession.run( mapOf(inputName to inputTensor))
+
+        // retorna os resultados.
+        val output = results[0].value as Array<String> // array de strings com True ou False
+        return output.toList().first() // pega o primeiro, pois soh possui um elemento
+    }
+
+    fun prediction () {
+        val textView_6: TextView = findViewById(R.id.text_view_predict_6h)
+        val textView_12: TextView = findViewById(R.id.text_view_predict_12h)
         val textView_24: TextView = findViewById(R.id.text_view_predict_24h)
 
-        textView_24.text = "Chuva em 24h: "
+        val ortEnvironment = OrtEnvironment.getEnvironment()
+        val ortSession = createORTSession( ortEnvironment )
+        var output = ""
 
-        Toast.makeText(this, "PREDICTION", Toast.LENGTH_SHORT).show()
+        // Definir valores das variáveis de entrada
+        val temperature = 24.32f
+        val humidity = 0.7592f
+        val pressure = 842.63f
+
+        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        textView_6.text = "Chuva em 6h: $output"
+        //Toast.makeText( this , "Chuva em 24h: $output" , Toast.LENGTH_LONG ).show()
+
+        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        textView_12.text = "Chuva em 12h: $output"
+
+        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        textView_24.text = "Chuva em 24h: $output"
     }
 }
