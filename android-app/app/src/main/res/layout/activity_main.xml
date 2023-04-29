@@ -221,12 +221,63 @@
             android:layout_weight="5"
         >
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:text="Temperatura: "
+            />
+            <EditText
+                android:id="@+id/predict_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="20.0"
+            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:text="Humidade: "
+            />
+            <EditText
+                android:id="@+id/predict_humidity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="0.75"
+            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:text="Pressao: "
+            />
+            <EditText
+                android:id="@+id/predict_pressure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="850.0"
+            />
+
+            <Button
+                android:id="@+id/btn_predict_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Predizer"
+                android:onClick="prediction"
+            />
+
+            <TextView
                 android:id="@+id/text_view_predict_6h"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:gravity="left"
-                android:text="Chuva em 24h: "
+                android:text="Chuva em 6h: "
             />
             <TextView
                 android:id="@+id/text_view_predict_12h"
@@ -234,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:gravity="left"
-                android:text="Chuva em 24h: "
+                android:text="Chuva em 12h: "
             />
             <TextView
                 android:id="@+id/text_view_predict_24h"

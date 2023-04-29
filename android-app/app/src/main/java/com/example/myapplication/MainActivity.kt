@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import ai.onnxruntime.OnnxMap
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
@@ -94,8 +95,6 @@ class MainActivity : AppCompatActivity() {
                 linearLayout = findViewById<LinearLayout>(R.id.layout_predict)
                 linearLayout.isEnabled = true
                 linearLayout.visibility = View.VISIBLE
-
-                prediction()
             }
             R.id.btn_about -> {
                 linearLayout = findViewById<LinearLayout>(R.id.layout_about)
@@ -254,13 +253,13 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------------------------------------
     // Predict
 
-    // Create an OrtSession with the given OrtEnvironment
-    private fun createORTSession( ortEnvironment: OrtEnvironment) : OrtSession {
-        val modelBytes = resources.openRawResource(R.raw.model_logistic_reg_24h).readBytes()
+    // cria o OrtSession com o OrtEnvironment
+    private fun createORTSession( ortEnvironment: OrtEnvironment, modelID: Int) : OrtSession {
+        val modelBytes = resources.openRawResource(modelID).readBytes()
         return ortEnvironment.createSession( modelBytes )
     }
 
-    // Make predictions with given inputs
+    // Fzer predicoes com os valores de entrada
     private fun runPrediction(temperature: Float, humidity: Float, pressure: Float, ortSession: OrtSession , ortEnvironment: OrtEnvironment ) : String {
         // obter o nome do nó de entrada.
         val inputName = ortSession.inputNames?.iterator()?.next()
@@ -275,36 +274,58 @@ class MainActivity : AppCompatActivity() {
         val inputTensor = OnnxTensor.createTensor(ortEnvironment, floatBufferInputs, longArrayOf(1, 3))
 
         // Roda o modelo
-        //val results = ortSession.run(mapOf(inputName to inputTensor), listOf(inputName))
         val results = ortSession.run( mapOf(inputName to inputTensor))
 
-        // retorna os resultados.
-        val output = results[0].value as Array<String> // array de strings com True ou False
-        return output.toList().first() // pega o primeiro, pois soh possui um elemento
+        // imprime os resultados
+        var output_probability = ""
+        for ((name, tensor) in results) {
+            when (name) {
+                "output_label" -> {
+                    val values = tensor.value as Array<String>
+                    println("$name: ${values.toList()}")
+                }
+                "output_probability" -> {
+                    val mapList = tensor.value as List<OnnxMap>
+                    output_probability = mapList.first().value["True"].toString()
+                    output_probability = kotlin.math.round(output_probability.toFloat() * 100).toString() + "%"
+                    println("Chance de chuva: $output_probability")
+                }
+                else -> println("$name: ${tensor.value.toString()}")
+            }
+        }
+
+        // retorna os resultados
+        return output_probability
     }
 
-    fun prediction () {
+    fun prediction (v: View) {
+        val edit_temperature: EditText = findViewById(R.id.predict_temperature)
+        val edit_humidity: EditText = findViewById(R.id.predict_humidity)
+        val edit_pressure: EditText = findViewById(R.id.predict_pressure)
         val textView_6: TextView = findViewById(R.id.text_view_predict_6h)
         val textView_12: TextView = findViewById(R.id.text_view_predict_12h)
         val textView_24: TextView = findViewById(R.id.text_view_predict_24h)
 
+        // definir valores das variaveis de entrada
+        val temperature = edit_temperature.text.toString().toFloat()
+        val humidity = edit_humidity.text.toString().toFloat()
+        val pressure = edit_pressure.text.toString().toFloat()
+
         val ortEnvironment = OrtEnvironment.getEnvironment()
-        val ortSession = createORTSession( ortEnvironment )
-        var output = ""
 
-        // Definir valores das variáveis de entrada
-        val temperature = 24.32f
-        val humidity = 0.7592f
-        val pressure = 842.63f
-
-        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        // 6 horas
+        var ortSession: OrtSession = createORTSession(ortEnvironment, R.raw.model_logistic_reg_6h)
+        var output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment)
         textView_6.text = "Chuva em 6h: $output"
-        //Toast.makeText( this , "Chuva em 24h: $output" , Toast.LENGTH_LONG ).show()
 
-        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        // 12 horas
+        ortSession = createORTSession(ortEnvironment, R.raw.model_logistic_reg_12h)
+        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment)
         textView_12.text = "Chuva em 12h: $output"
 
-        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment )
+        // 24 horas
+        ortSession = createORTSession(ortEnvironment, R.raw.model_logistic_reg_24h)
+        output = runPrediction(temperature, humidity, pressure, ortSession , ortEnvironment)
         textView_24.text = "Chuva em 24h: $output"
     }
 }
