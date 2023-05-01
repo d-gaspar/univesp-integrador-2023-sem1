@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
->
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_main"
+    <LinearLayout
+        android:id="@+id/layout_bt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
     >
-        <!-- MENU -->
+        <!-- SUBMENU -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -22,48 +17,39 @@
             android:layout_weight="1"
         >
             <Button
-                android:id="@+id/btn_bluetooth"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="BT"
+                android:text="CONECTAR"
                 android:layout_weight="1"
-                android:onClick="mainMenuBtn"
+                android:onClick="connectBT"
             />
-
             <Button
-                android:id="@+id/btn_data"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="DATA"
+                android:text="LIMPAR"
                 android:layout_weight="1"
-                android:onClick="mainMenuBtn"
+                android:onClick="clearBT"
             />
-
             <Button
-                android:id="@+id/btn_predict"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="PREDICT"
+                android:text="SALVAR"
                 android:layout_weight="1"
-                android:onClick="mainMenuBtn"
-            />
-
-            <Button
-                android:id="@+id/btn_about"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="SOBRE"
-                android:layout_weight="1"
-                android:onClick="mainMenuBtn"
+                android:onClick="saveBT"
             />
         </LinearLayout>
 
-        <!-- FrameLayout -->
-        <FrameLayout
-            android:id="@+id/content_frame"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="11"
-        />
+            android:layout_weight="10"
+        >
+            <TextView
+                android:id="@+id/text_view_bt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+            />
+        </ScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,11 @@
-package com.example.myapplication
+package com.example.weatheriot
 
 import ai.onnxruntime.OnnxMap
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothSocket
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
@@ -20,14 +15,12 @@ import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import java.io.*
 import java.nio.FloatBuffer
-import java.nio.file.Paths
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        connectButton = findViewById(R.id.btn_connect)
+        /*connectButton = findViewById(R.id.btn_connect)
         textViewBT = findViewById(R.id.text_view_bt)
 
         bluetoothService = BluetoothService(this)
@@ -57,12 +50,43 @@ class MainActivity : AppCompatActivity() {
             linearLayout = findViewById<LinearLayout>(i)
             linearLayout.isEnabled = false
             linearLayout.visibility = View.INVISIBLE
-        }
+        }*/
     }
 
     // ---------------------------------------------------------------------------------------------
     // menu principal
 
+    fun mainMenuBtn (v: View) {
+        val contentFrame = findViewById<FrameLayout>(R.id.content_frame)
+
+        // limpa o frame
+        contentFrame.removeAllViews()
+
+        when (v.id) {
+            R.id.btn_bluetooth -> {
+                val content = layoutInflater.inflate(R.layout.bt_layout, null)
+                contentFrame.addView(content)
+            }
+            R.id.btn_data -> {
+                val content = layoutInflater.inflate(R.layout.data_layout, null)
+                contentFrame.addView(content)
+
+                listData()
+            }
+            R.id.btn_predict -> {
+                val content = layoutInflater.inflate(R.layout.predict_layout, null)
+                contentFrame.addView(content)
+            }
+            R.id.btn_about -> {
+                val content = layoutInflater.inflate(R.layout.about_layout, null)
+                contentFrame.addView(content)
+            }
+            else -> {
+                Toast.makeText(this, "LAYOUT INEXISTENTE", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+/*
     fun mainMenuBtn (v: View) {
         var linearLayout: LinearLayout
 
@@ -194,12 +218,11 @@ class MainActivity : AppCompatActivity() {
 
         filenameDialog.show()
     }
-
+*/
     // ---------------------------------------------------------------------------------------------
     // Data
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun listData () {
+    private fun listData () {
         val path = getExternalFilesDir(null)
 
         if (path != null) {
@@ -227,7 +250,6 @@ class MainActivity : AppCompatActivity() {
         textView.text = data.joinToString(separator = "\n")
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun exportData (v: View) {
         val emailInputDialog = AlertDialog.Builder(this)
         emailInputDialog.setTitle("Enviar arquivo de texto")
@@ -259,7 +281,7 @@ class MainActivity : AppCompatActivity() {
         return ortEnvironment.createSession( modelBytes )
     }
 
-    // Fzer predicoes com os valores de entrada
+    // faz predicoes com os valores de entrada
     private fun runPrediction(temperature: Float, humidity: Float, pressure: Float, ortSession: OrtSession , ortEnvironment: OrtEnvironment ) : String {
         // obter o nome do nó de entrada.
         val inputName = ortSession.inputNames?.iterator()?.next()
