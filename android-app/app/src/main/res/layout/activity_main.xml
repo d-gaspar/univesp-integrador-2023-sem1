@@ -321,6 +321,20 @@
                 app:layout_constraintBaseline_toBottomOf="parent"
                 app:layout_constraintBaseline_toTopOf="parent"
             />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="left"
+                android:text="Icones:\nhttps://icons8.com"
+                android:layout_marginBottom="16dp"
+                android:scrollHorizontally="false"
+                android:scrollbars="vertical"
+                android:inputType="textMultiLine"
+                app:layout_constraintBaseline_toBottomOf="parent"
+                app:layout_constraintBaseline_toTopOf="parent"
+            />
         </LinearLayout>
 
     </LinearLayout>
