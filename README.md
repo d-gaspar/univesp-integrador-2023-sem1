@@ -42,3 +42,7 @@ $ Rscript src/report_data.R
 ![Relatório da captura inicial de dados](image/report_data.png)
 <center><b>Figura 2:</b> Relatório da captura inicial de dados.</center>
 
+# Instalação do APK
+
+O apk para instalar no android esta localizado em:
+- android-app/app/release/app-release.apk
