@@ -17,9 +17,11 @@
             android:layout_weight="1"
         >
             <Button
+                android:id="@+id/connectButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="CONECTAR"
+                android:textSize="10sp"
                 android:layout_weight="1"
                 android:onClick="connectBT"
             />
@@ -27,6 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="LIMPAR"
+                android:textSize="10sp"
                 android:layout_weight="1"
                 android:onClick="clearBT"
             />
@@ -34,6 +37,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="SALVAR"
+                android:textSize="10sp"
                 android:layout_weight="1"
                 android:onClick="saveBT"
             />

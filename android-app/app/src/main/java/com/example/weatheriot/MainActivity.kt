@@ -31,26 +31,13 @@ class MainActivity : AppCompatActivity() {
     private val messages = mutableListOf<String>()
     private val messagesSpannable = SpannableStringBuilder()
     private val data = mutableListOf<String>()
-    private lateinit var connectButton: Button
-    private lateinit var textViewBT: TextView
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*connectButton = findViewById(R.id.btn_connect)
-        textViewBT = findViewById(R.id.text_view_bt)
-
         bluetoothService = BluetoothService(this)
-
-        // desativar sub-menus
-        var linearLayout: LinearLayout
-        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_predict, R.id.layout_about)) {
-            linearLayout = findViewById<LinearLayout>(i)
-            linearLayout.isEnabled = false
-            linearLayout.visibility = View.INVISIBLE
-        }*/
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -86,64 +73,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-/*
-    fun mainMenuBtn (v: View) {
-        var linearLayout: LinearLayout
-
-        // desativa layout ativo
-        for (i in listOf<Int>(R.id.layout_bt, R.id.layout_data, R.id.layout_predict, R.id.layout_about)) {
-            linearLayout = findViewById<LinearLayout>(i)
-            linearLayout.isEnabled = false
-            linearLayout.visibility = View.GONE
-        }
-
-        // ativa layout atual
-        when (v.id) {
-            R.id.btn_bluetooth -> {
-                linearLayout = findViewById<LinearLayout>(R.id.layout_bt)
-                linearLayout.isEnabled = true
-                linearLayout.visibility = View.VISIBLE
-            }
-            R.id.btn_content_table -> {
-                linearLayout = findViewById<LinearLayout>(R.id.layout_data)
-                linearLayout.isEnabled = true
-                linearLayout.visibility = View.VISIBLE
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    listData()
-                } else {
-                    Toast.makeText(this, "Esta funcionalidade requer a versao Android 'O' ou superior", Toast.LENGTH_SHORT).show()
-                }
-            }
-            R.id.btn_predict -> {
-                linearLayout = findViewById<LinearLayout>(R.id.layout_predict)
-                linearLayout.isEnabled = true
-                linearLayout.visibility = View.VISIBLE
-            }
-            R.id.btn_about -> {
-                linearLayout = findViewById<LinearLayout>(R.id.layout_about)
-                linearLayout.isEnabled = true
-                linearLayout.visibility = View.VISIBLE
-            }
-        }
-    }
 
     // ---------------------------------------------------------------------------------------------
     // Bluetooth
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     fun connectBT (v: View) {
+        val connectButton: Button = findViewById(R.id.connectButton)
+
         // conecta ao dispositivo bluetooth
         if (!connected) {
-            socket = bluetoothService.connect()!!
-            if (socket != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    bluetoothService.startListeningThread(socket, ::updateValues)
-                    connected = true
-                    connectButton.text = "Desconectar"
-                } else {
-                    Toast.makeText(this, "Esta funcionalidade requer a versao Android 'N' ou superior", Toast.LENGTH_SHORT).show()
-                }
+            socket = bluetoothService.connect() ?: run {
+                return // retorna null
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                bluetoothService.startListeningThread(socket, ::updateValues)
+                connected = true
+                connectButton.text = "Desconectar"
+            } else {
+                Toast.makeText(this, "Esta funcionalidade requer a versao Android 'N' ou superior", Toast.LENGTH_SHORT).show()
             }
         } else {
             bluetoothService.disconnect(socket)
@@ -159,6 +106,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateValues (message: String) {
         val dataTime: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(Date())
         val dataTimeMessage = "$dataTime $message" // "yyyy-MM-dd HH:mm:ss.SSS MESSAGE"
+        val textViewBT: TextView = findViewById(R.id.text_view_bt)
 
         val spannable = SpannableStringBuilder(dataTimeMessage)
         spannable.setSpan(ForegroundColorSpan(Color.GREEN), 0, dataTime.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -175,6 +123,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clearBT (v: View) {
+        val textViewBT: TextView = findViewById(R.id.text_view_bt)
+
         messages.clear()
         messagesSpannable.clear() // alterando a cor
         //textViewBT.text = messages.joinToString(separator = "") // Sem alterar a cor
@@ -185,6 +135,7 @@ class MainActivity : AppCompatActivity() {
     fun saveBT (v: View) {
         val string = messages.joinToString(separator = "")
         val filenameDefault = "raw_" + SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS", Locale.getDefault()).format(Date())
+        val textViewBT: TextView = findViewById(R.id.text_view_bt)
 
         val filenameEditText = EditText(this)
         filenameEditText.setText(filenameDefault)
@@ -218,7 +169,7 @@ class MainActivity : AppCompatActivity() {
 
         filenameDialog.show()
     }
-*/
+
     // ---------------------------------------------------------------------------------------------
     // Data
 
@@ -270,6 +221,10 @@ class MainActivity : AppCompatActivity() {
         }
         emailInputDialog.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
         emailInputDialog.show()
+    }
+
+    fun deleteData (v: View) {
+        Toast.makeText(this, "FUNCAO NAO IMPLEMENTADA", Toast.LENGTH_SHORT).show()
     }
 
     // ---------------------------------------------------------------------------------------------

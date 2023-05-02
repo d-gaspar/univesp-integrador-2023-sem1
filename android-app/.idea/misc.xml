@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.35128205128205126" />
         <entry key="app/src/main/res/layout/about_layout.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/bt_layout.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/layout/bt_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/data_layout.xml" value="0.1656534954407295" />
         <entry key="app/src/main/res/layout/predict_layout.xml" value="0.18385416666666668" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20364583333333333" />

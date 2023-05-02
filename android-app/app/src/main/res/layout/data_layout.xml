@@ -29,6 +29,7 @@
                 android:layout_height="match_parent"
                 android:text="EXCLUIR"
                 android:layout_weight="1"
+                android:onClick="deleteData"
             />
         </LinearLayout>
 

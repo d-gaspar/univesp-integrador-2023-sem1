@@ -33,7 +33,7 @@ class BluetoothService(private val context: Context) {
 
         // verifica se o dispositivo suporta bluetooth
         if (bluetoothAdapter == null) {
-            //Toast.makeText(context, "Este dispositivo nao suporta bluetooth", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Este dispositivo nao suporta bluetooth", Toast.LENGTH_SHORT).show()
             return null
         }
 
@@ -82,7 +82,6 @@ class BluetoothService(private val context: Context) {
             socket
         } catch (e: IOException) {
             Toast.makeText(context, "Nao foi possivel conectar ao dispositivo", Toast.LENGTH_SHORT).show()
-
             null
         }
     }
